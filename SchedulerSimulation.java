@@ -147,6 +147,7 @@ class Process implements Runnable {
 }
 
 public class SchedulerSimulation {
+    private static long totalWaitingTime = 0;
     private static int contextSwitches =0;
     public static void main(String[] args) {
         // ⚠️ IMPORTANT: Put your student ID here to seed the random number generator
@@ -242,6 +243,10 @@ public class SchedulerSimulation {
             System.out.println(Colors.BOLD + Colors.MAGENTA + "└" + "─".repeat(79) + Colors.RESET + "\n");
             
             // Start the thread, which will run the process for one time quantum
+            Process currentProcess = processMap.get(currentThread);
+            if (currentProcess != null){
+                totalWaitingTime += currentProcess.getWaitingTime();
+            }
             currentThread.start();
             
             try {
@@ -283,6 +288,9 @@ public class SchedulerSimulation {
                            // Feature 2: Print total context switches
         System.out.println(Colors.BOLD + Colors.CYAN + "  🔄 Total Context Switches: " + Colors.BRIGHT_YELLOW + contextSwitches + Colors.RESET + "\n");
                           Colors.RESET + "\n");
+        System.out.println(Colors.BOLD + Colors.CYAN + " Total waiting Time: " + Colors.BRIGHT_YELLOW + totalWaitingTime + Colors.RESET);
+        double avgWaitingTime = (double) totalWaitingTime / processMap.size();
+        System.out.println(Colors.BOLD + Colors.CYAN + " Average waiting Time: " + Colors.BRIGHT_YELLOW + String.format("%.2f", avgWaitingTime)+"ms"+ Colors.RESET + "\n");
     }
     
     // Method to add a process to the queue and map, while printing a "ready" message
